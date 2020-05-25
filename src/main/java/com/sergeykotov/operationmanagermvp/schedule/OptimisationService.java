@@ -11,13 +11,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class OptimisationService {
-    public List<Op> generateOptimalSchedule(List<Op> ops) {
+    public Schedule generateOptimalSchedule(long groupId, List<Op> ops) {
         List<List<Op>> schedules = getAllPossibleSchedules(ops);
         List<Op> schedule = selectOptimalSchedule(schedules);
         schedule.stream()
                 .filter(o -> o.getStatus().equals(Op.Status.UNSCHEDULED) || o.getStatus().equals(Op.Status.CANCELLED))
                 .forEach(o -> o.setStatus(Op.Status.SCHEDULED));
-        return schedule;
+        return new Schedule(groupId, schedule);
     }
 
     private List<List<Op>> getAllPossibleSchedules(List<Op> ops) {

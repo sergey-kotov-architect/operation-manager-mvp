@@ -14,10 +14,12 @@ public class Event {
     private String note;
 
     public enum Action {
-        CREATED, UPDATED, DELETED, GENERATED
+        CREATED, UPDATED, DELETED, INITIATED, COMPLETED, SAVED, FAILED_TO_SAVE
     }
 
-    public enum Entity {TASK, EXECUTOR, PERIOD, GROUP, OP, SCHEDULE}
+    public enum Entity {
+        TASK, EXECUTOR, PERIOD, GROUP, OP, SCHEDULING, SCHEDULE
+    }
 
     public Event() {
     }

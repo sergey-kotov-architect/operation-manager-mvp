@@ -41,11 +41,11 @@ from its mean value.
 [Optimisation Service](src/main/java/com/sergeykotov/operationmanagermvp/schedule/OptimisationService.java)  
 
 ### TODO  
-* complement Op Repository  
-* define Schedule and implement Schedule Service  
+* complete OpRepository  
 * define Metrics and implement its evaluation  
 * provide extracting events in real-time mode  
 * implement Chat Service  
 * implement Notification Service  
 * add integration and more unit tests, refine existing test of Optimisation Service  
-* add API documentation
+* add API documentation  
+* improve properties

@@ -37,6 +37,18 @@ public class OpRepository {
         }
     }
 
+    public List<Op> extract(long groupId) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    public List<Op> extractSchedule() throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    public List<Op> extractSchedule(long groupId) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
     public boolean create(Op op) throws SQLException {
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CMD)) {

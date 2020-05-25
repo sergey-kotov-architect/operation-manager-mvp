@@ -50,6 +50,6 @@ public class OptimisationServiceTest {
         expectedSchedule.add(op22);
         expectedSchedule.add(op33);
 
-        assertEquals(expectedSchedule, optimisationService.generateOptimalSchedule(ops));
+        assertEquals(expectedSchedule, optimisationService.generateOptimalSchedule(1, ops).getOps());
     }
 }
