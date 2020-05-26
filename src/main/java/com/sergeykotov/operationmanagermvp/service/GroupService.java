@@ -49,7 +49,8 @@ public class GroupService {
         eventService.create(start, end, Event.Action.CREATED, Event.Entity.GROUP, group.toString(), group);
     }
 
-    public void update(Group group) {
+    public void update(long id, Group group) {
+        group.setId(id);
         log.info("updating group {}", group);
         long start = System.currentTimeMillis();
         try {
@@ -63,7 +64,8 @@ public class GroupService {
         eventService.create(start, end, Event.Action.UPDATED, Event.Entity.GROUP, group.toString(), group);
     }
 
-    public void delete(Group group) {
+    public void delete(long id, Group group) {
+        group.setId(id);
         log.info("deleting group {}", group);
         long start = System.currentTimeMillis();
         try {

@@ -32,13 +32,13 @@ public class PeriodController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody @Valid Period period) {
-        periodService.update(period);
+    public void update(@PathVariable long id, @RequestBody @Valid Period period) {
+        periodService.update(id, period);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Valid Period period) {
-        periodService.delete(period);
+    public void delete(@PathVariable long id, @RequestBody @Valid Period period) {
+        periodService.delete(id, period);
     }
 }

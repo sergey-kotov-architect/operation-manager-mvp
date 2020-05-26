@@ -49,7 +49,8 @@ public class TaskService {
         eventService.create(start, end, Event.Action.CREATED, Event.Entity.TASK, task.toString(), task);
     }
 
-    public void update(Task task) {
+    public void update(long id, Task task) {
+        task.setId(id);
         log.info("updating task {}", task);
         long start = System.currentTimeMillis();
         try {
@@ -63,7 +64,8 @@ public class TaskService {
         eventService.create(start, end, Event.Action.UPDATED, Event.Entity.TASK, task.toString(), task);
     }
 
-    public void delete(Task task) {
+    public void delete(long id, Task task) {
+        task.setId(id);
         log.info("deleting task {}", task);
         long start = System.currentTimeMillis();
         try {

@@ -49,7 +49,8 @@ public class ExecutorService {
         eventService.create(start, end, Event.Action.CREATED, Event.Entity.EXECUTOR, executor.toString(), executor);
     }
 
-    public void update(Executor executor) {
+    public void update(long id, Executor executor) {
+        executor.setId(id);
         log.info("updating executor {}", executor);
         long start = System.currentTimeMillis();
         try {
@@ -63,7 +64,8 @@ public class ExecutorService {
         eventService.create(start, end, Event.Action.UPDATED, Event.Entity.EXECUTOR, executor.toString(), executor);
     }
 
-    public void delete(Executor executor) {
+    public void delete(long id, Executor executor) {
+        executor.setId(id);
         log.info("deleting executor {}", executor);
         long start = System.currentTimeMillis();
         try {

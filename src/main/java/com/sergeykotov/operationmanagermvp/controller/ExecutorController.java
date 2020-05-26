@@ -32,13 +32,13 @@ public class ExecutorController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody @Valid Executor executor) {
-        executorService.update(executor);
+    public void update(@PathVariable long id, @RequestBody @Valid Executor executor) {
+        executorService.update(id, executor);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Valid Executor executor) {
-        executorService.delete(executor);
+    public void delete(@PathVariable long id, @RequestBody @Valid Executor executor) {
+        executorService.delete(id, executor);
     }
 }

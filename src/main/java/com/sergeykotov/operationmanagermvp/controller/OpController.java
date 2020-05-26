@@ -32,13 +32,13 @@ public class OpController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody @Valid Op op) {
-        opService.update(op);
+    public void update(@PathVariable long id, @RequestBody @Valid Op op) {
+        opService.update(id, op);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Valid Op op) {
-        opService.delete(op);
+    public void delete(@PathVariable long id, @RequestBody @Valid Op op) {
+        opService.delete(id, op);
     }
 }

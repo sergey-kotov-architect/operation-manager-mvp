@@ -32,13 +32,13 @@ public class GroupController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody @Valid Group group) {
-        groupService.update(group);
+    public void update(@PathVariable long id, @RequestBody @Valid Group group) {
+        groupService.update(id, group);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Valid Group group) {
-        groupService.delete(group);
+    public void delete(@PathVariable long id, @RequestBody @Valid Group group) {
+        groupService.delete(id, group);
     }
 }

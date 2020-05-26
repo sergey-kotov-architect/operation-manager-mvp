@@ -25,7 +25,14 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public List<Event> extract() {
+    public List<Event> extract(Long since) {
+        if (since == null) {
+            return extract();
+        }
+        return extractSince(since);
+    }
+
+    private List<Event> extract() {
         try {
             return eventRepository.extract();
         } catch (Exception e) {
@@ -34,7 +41,7 @@ public class EventService {
         }
     }
 
-    public List<Event> extract(long since) {
+    private List<Event> extractSince(long since) {
         try {
             return eventRepository.extract(since);
         } catch (Exception e) {

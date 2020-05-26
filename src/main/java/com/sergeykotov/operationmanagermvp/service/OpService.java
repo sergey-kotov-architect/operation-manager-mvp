@@ -53,7 +53,8 @@ public class OpService {
         metricsService.createEvaluatingTask(op.getGroup().getId());
     }
 
-    public void update(Op op) {
+    public void update(long id, Op op) {
+        op.setId(id);
         log.info("updating op {}", op);
         long start = System.currentTimeMillis();
         try {
@@ -68,7 +69,8 @@ public class OpService {
         metricsService.createEvaluatingTask(op.getGroup().getId());
     }
 
-    public void delete(Op op) {
+    public void delete(long id, Op op) {
+        op.setId(id);
         log.info("deleting op {}", op);
         long start = System.currentTimeMillis();
         try {

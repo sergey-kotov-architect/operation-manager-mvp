@@ -32,13 +32,13 @@ public class TaskController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody @Valid Task task) {
-        taskService.update(task);
+    public void update(@PathVariable long id, @RequestBody @Valid Task task) {
+        taskService.update(id, task);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody @Valid Task task) {
-        taskService.delete(task);
+    public void delete(@PathVariable long id, @RequestBody @Valid Task task) {
+        taskService.delete(id, task);
     }
 }

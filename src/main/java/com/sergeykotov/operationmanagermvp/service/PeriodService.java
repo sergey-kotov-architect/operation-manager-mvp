@@ -49,7 +49,8 @@ public class PeriodService {
         eventService.create(start, end, Event.Action.CREATED, Event.Entity.PERIOD, period.toString(), period);
     }
 
-    public void update(Period period) {
+    public void update(long id, Period period) {
+        period.setId(id);
         log.info("updating period {}", period);
         long start = System.currentTimeMillis();
         try {
@@ -63,7 +64,8 @@ public class PeriodService {
         eventService.create(start, end, Event.Action.UPDATED, Event.Entity.PERIOD, period.toString(), period);
     }
 
-    public void delete(Period period) {
+    public void delete(long id, Period period) {
+        period.setId(id);
         log.info("deleting period {}", period);
         long start = System.currentTimeMillis();
         try {
