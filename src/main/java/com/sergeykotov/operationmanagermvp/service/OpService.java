@@ -4,6 +4,7 @@ import com.sergeykotov.operationmanagermvp.event.Event;
 import com.sergeykotov.operationmanagermvp.event.EventService;
 import com.sergeykotov.operationmanagermvp.exception.DatabaseException;
 import com.sergeykotov.operationmanagermvp.exception.ExtractionException;
+import com.sergeykotov.operationmanagermvp.metrics.MetricsService;
 import com.sergeykotov.operationmanagermvp.model.Op;
 import com.sergeykotov.operationmanagermvp.repository.OpRepository;
 import org.slf4j.Logger;
@@ -19,11 +20,13 @@ public class OpService {
 
     private final EventService eventService;
     private final OpRepository opRepository;
+    private final MetricsService metricsService;
 
     @Autowired
-    public OpService(EventService eventService, OpRepository opRepository) {
+    public OpService(EventService eventService, OpRepository opRepository, MetricsService metricsService) {
         this.eventService = eventService;
         this.opRepository = opRepository;
+        this.metricsService = metricsService;
     }
 
     public List<Op> extract() {
@@ -47,6 +50,7 @@ public class OpService {
         long end = System.currentTimeMillis();
         log.info("op {} created", op);
         eventService.create(start, end, Event.Action.CREATED, Event.Entity.OP, op.toString(), op);
+        metricsService.createEvaluatingTask(op.getGroup().getId());
     }
 
     public void update(Op op) {
@@ -61,6 +65,7 @@ public class OpService {
         long end = System.currentTimeMillis();
         log.info("op {} updated", op);
         eventService.create(start, end, Event.Action.UPDATED, Event.Entity.OP, op.toString(), op);
+        metricsService.createEvaluatingTask(op.getGroup().getId());
     }
 
     public void delete(Op op) {
@@ -75,5 +80,6 @@ public class OpService {
         long end = System.currentTimeMillis();
         log.info("op {} deleted", op);
         eventService.create(start, end, Event.Action.DELETED, Event.Entity.OP, op.toString(), op);
+        metricsService.createEvaluatingTask(op.getGroup().getId());
     }
 }

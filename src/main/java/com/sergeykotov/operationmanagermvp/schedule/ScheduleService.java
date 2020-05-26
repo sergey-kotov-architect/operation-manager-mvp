@@ -3,6 +3,7 @@ package com.sergeykotov.operationmanagermvp.schedule;
 import com.sergeykotov.operationmanagermvp.event.Event;
 import com.sergeykotov.operationmanagermvp.event.EventService;
 import com.sergeykotov.operationmanagermvp.exception.ExtractionException;
+import com.sergeykotov.operationmanagermvp.metrics.MetricsService;
 import com.sergeykotov.operationmanagermvp.model.Op;
 import com.sergeykotov.operationmanagermvp.repository.OpRepository;
 import org.slf4j.Logger;
@@ -22,12 +23,17 @@ public class ScheduleService {
     private final OpRepository opRepository;
     private final OptimisationService optimisationService;
     private final EventService eventService;
+    private final MetricsService metricsService;
 
     @Autowired
-    public ScheduleService(OpRepository opRepository, OptimisationService optimisationService, EventService eventService) {
+    public ScheduleService(OpRepository opRepository,
+                           OptimisationService optimisationService,
+                           EventService eventService,
+                           MetricsService metricsService) {
         this.opRepository = opRepository;
         this.optimisationService = optimisationService;
         this.eventService = eventService;
+        this.metricsService = metricsService;
     }
 
     public Schedule extract() {
@@ -80,5 +86,6 @@ public class ScheduleService {
         long end = System.currentTimeMillis();
         log.info("schedule {} saved", schedule);
         eventService.create(start, end, Event.Action.SAVED, Event.Entity.SCHEDULE, schedule.toString(), schedule);
+        metricsService.createEvaluatingTask(schedule.getGroupId());
     }
 }

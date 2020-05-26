@@ -42,7 +42,6 @@ from its mean value.
 
 ### TODO  
 * complete OpRepository  
-* define Metrics and implement its evaluation  
 * provide extracting events in real-time mode  
 * implement Chat Service  
 * implement Notification Service  

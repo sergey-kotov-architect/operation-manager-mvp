@@ -17,6 +17,7 @@ public class GroupRepository {
     private static final String FIND_BY_ID_CMD = "select g.name, g.note, g.metrics from op_group g where g.id = ?";
     private static final String CREATE_CMD = "insert into op_group (name, note) values (?, ?)";
     private static final String UPDATE_CMD = "update op_group set name = ?, note = ?, metrics = ? where id = ?";
+    private static final String UPDATE_METRICS_CMD = "update op_group set metrics = ? where id = ?";
     private static final String DELETE_CMD = "delete from op_group where id = ?";
 
     public List<Group> extract() throws SQLException {
@@ -70,6 +71,15 @@ public class GroupRepository {
             preparedStatement.setString(2, group.getNote());
             preparedStatement.setString(3, group.getMetrics());
             preparedStatement.setLong(4, group.getId());
+            return preparedStatement.executeUpdate() == 1;
+        }
+    }
+
+    public boolean updateMetricsById(long id, String metrics) throws SQLException {
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_METRICS_CMD)) {
+            preparedStatement.setString(1, metrics);
+            preparedStatement.setLong(2, id);
             return preparedStatement.executeUpdate() == 1;
         }
     }
