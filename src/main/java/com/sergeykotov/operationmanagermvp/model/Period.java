@@ -1,8 +1,7 @@
 package com.sergeykotov.operationmanagermvp.model;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
+import javax.validation.constraints.Positive;
 import java.util.Objects;
 
 public class Period {
@@ -13,11 +12,11 @@ public class Period {
 
     private String note;
 
-    @NotNull
-    private ZonedDateTime start;
+    @Positive
+    private long start;
 
-    @NotNull
-    private ZonedDateTime end;
+    @Positive
+    private long end;
 
     public Period() {
     }
@@ -50,19 +49,19 @@ public class Period {
         this.note = note;
     }
 
-    public ZonedDateTime getStart() {
+    public long getStart() {
         return start;
     }
 
-    public void setStart(ZonedDateTime start) {
+    public void setStart(long start) {
         this.start = start;
     }
 
-    public ZonedDateTime getEnd() {
+    public long getEnd() {
         return end;
     }
 
-    public void setEnd(ZonedDateTime end) {
+    public void setEnd(long end) {
         this.end = end;
     }
 

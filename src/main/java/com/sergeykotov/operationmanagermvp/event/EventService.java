@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -19,6 +20,10 @@ public class EventService {
     private static final Logger log = LoggerFactory.getLogger(EventService.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
+
+    static {
+        objectMapper.setDateFormat(DateFormat.getDateInstance());
+    }
 
     private final EventRepository eventRepository;
 
