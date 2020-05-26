@@ -1,14 +1,14 @@
 package com.sergeykotov.operationmanagermvp.event;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 public class Event {
     private long id;
     private long startTimestamp;
-    private LocalDateTime start;
+    private ZonedDateTime start;
     private long endTimestamp;
-    private LocalDateTime end;
+    private ZonedDateTime end;
     private long elapsed;
     private Action action;
     private Entity entity;
@@ -28,9 +28,9 @@ public class Event {
     }
 
     public Event(long startTimestamp,
-                 LocalDateTime start,
+                 ZonedDateTime start,
                  long endTimestamp,
-                 LocalDateTime end,
+                 ZonedDateTime end,
                  long elapsed,
                  Action action,
                  Entity entity,
@@ -65,11 +65,11 @@ public class Event {
         this.startTimestamp = startTimestamp;
     }
 
-    public LocalDateTime getStart() {
+    public ZonedDateTime getStart() {
         return start;
     }
 
-    public void setStart(LocalDateTime start) {
+    public void setStart(ZonedDateTime start) {
         this.start = start;
     }
 
@@ -81,11 +81,11 @@ public class Event {
         this.endTimestamp = endTimestamp;
     }
 
-    public LocalDateTime getEnd() {
+    public ZonedDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(ZonedDateTime end) {
         this.end = end;
     }
 

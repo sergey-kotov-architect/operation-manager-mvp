@@ -7,7 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class EventRepository {
     private static final String EXTRACT_SINCE_CMD = "select e.id, e.start_timestamp, e.start_time, e.end_timestamp, e.end_time, e.elapsed, e.action, e.entity, e.name, e.user, e.note from event e where e.start_timestamp >= ?";
     private static final String CREATE_CMD = "insert into event (start_timestamp,start_time,end_timestamp,end_time,elapsed,action,entity,name,user,note) values (?,?,?,?,?,?,?,?,?,?)";
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
 
     private List<Event> extract(ResultSet resultSet) throws SQLException {
         List<Event> events = new ArrayList<>();
@@ -26,9 +26,9 @@ public class EventRepository {
             Event event = new Event();
             event.setId(resultSet.getLong("id"));
             event.setStartTimestamp(resultSet.getLong("start_timestamp"));
-            event.setStart(LocalDateTime.parse(resultSet.getString("start_time"), formatter));
+            event.setStart(ZonedDateTime.parse(resultSet.getString("start_time"), formatter));
             event.setEndTimestamp(resultSet.getLong("end_timestamp"));
-            event.setEnd(LocalDateTime.parse(resultSet.getString("end_time"), formatter));
+            event.setEnd(ZonedDateTime.parse(resultSet.getString("end_time"), formatter));
             event.setElapsed(resultSet.getLong("elapsed"));
             event.setAction(Event.Action.valueOf(resultSet.getString("action")));
             event.setEntity(Event.Entity.valueOf(resultSet.getString("entity")));

@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.TimeZone;
 
 @Service
 public class EventService {
@@ -59,8 +59,8 @@ public class EventService {
             return;
         }
         String user = ""; //TODO: obtain username from current session
-        LocalDateTime startTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(start), TimeZone.getDefault().toZoneId());
-        LocalDateTime endTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(end), TimeZone.getDefault().toZoneId());
+        ZonedDateTime startTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(start), ZoneId.systemDefault());
+        ZonedDateTime endTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(end), ZoneId.systemDefault());
         Event event = new Event(start, startTime, end, endTime, end - start, action, entity, name, user, note);
         try {
             eventRepository.create(event);
