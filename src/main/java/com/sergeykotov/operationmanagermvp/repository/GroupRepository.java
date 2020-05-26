@@ -43,7 +43,7 @@ public class GroupRepository {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     Group group = new Group();
-                    group.setId(resultSet.getLong("id"));
+                    group.setId(id);
                     group.setName(resultSet.getString("name"));
                     group.setNote(resultSet.getString("note"));
                     group.setMetrics(resultSet.getString("metrics"));
