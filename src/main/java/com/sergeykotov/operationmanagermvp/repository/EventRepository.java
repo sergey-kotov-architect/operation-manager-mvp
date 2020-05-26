@@ -11,7 +11,7 @@ import java.util.List;
 public class EventRepository {
     private static final String EXTRACT_CMD = "select e.id, e.start_timestamp, e.start_time, e.end_timestamp, e.end_time, e.elapsed, e.action, e.entity, e.name, e.user, e.note from event e";
     private static final String EXTRACT_SINCE_CMD = "select e.id, e.start_timestamp, e.start_time, e.end_timestamp, e.end_time, e.elapsed, e.action, e.entity, e.name, e.user, e.note from event e where e.start_time >= ?";
-    private static final String CREATE_CMD = "insert into event (start_timestamp,start_time,end_timestamp,end_time,elapsed,action,entity,name,user,note) values (?,?,?,?,?,?,?,?)";
+    private static final String CREATE_CMD = "insert into event (start_timestamp,start_time,end_timestamp,end_time,elapsed,action,entity,name,user,note) values (?,?,?,?,?,?,?,?,?,?)";
 
     private List<Event> extract(ResultSet resultSet) throws SQLException {
         List<Event> events = new ArrayList<>();
