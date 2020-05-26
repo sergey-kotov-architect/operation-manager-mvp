@@ -46,5 +46,9 @@ from its mean value.
 * implement Chat Service  
 * implement Notification Service  
 * add integration and more unit tests, refine existing test of Optimisation Service  
+* employ CI tool  
 * add API documentation  
-* improve properties
+* improve properties  
+* implement ApiGateway (users, roles, authentication)  
+* implement frontend  
+* create a presentation
