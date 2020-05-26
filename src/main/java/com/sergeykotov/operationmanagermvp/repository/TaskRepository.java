@@ -33,30 +33,42 @@ public class TaskRepository {
         }
     }
 
-    public boolean create(Task task) throws SQLException {
+    public void create(Task task) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CMD)) {
             preparedStatement.setString(1, task.getName());
             preparedStatement.setString(2, task.getNote());
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 
-    public boolean update(Task task) throws SQLException {
+    public void update(Task task) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CMD)) {
             preparedStatement.setString(1, task.getName());
             preparedStatement.setString(2, task.getNote());
             preparedStatement.setLong(3, task.getId());
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 
-    public boolean delete(long id) throws SQLException {
+    public void delete(long id) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CMD)) {
             preparedStatement.setLong(1, id);
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 }

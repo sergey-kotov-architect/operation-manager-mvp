@@ -55,40 +55,56 @@ public class GroupRepository {
         }
     }
 
-    public boolean create(Group group) throws SQLException {
+    public void create(Group group) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CMD)) {
             preparedStatement.setString(1, group.getName());
             preparedStatement.setString(2, group.getNote());
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 
-    public boolean update(Group group) throws SQLException {
+    public void update(Group group) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CMD)) {
             preparedStatement.setString(1, group.getName());
             preparedStatement.setString(2, group.getNote());
             preparedStatement.setString(3, group.getMetrics());
             preparedStatement.setLong(4, group.getId());
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 
-    public boolean updateMetricsById(long id, String metrics) throws SQLException {
+    public void updateMetricsById(long id, String metrics) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_METRICS_CMD)) {
             preparedStatement.setString(1, metrics);
             preparedStatement.setLong(2, id);
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 
-    public boolean delete(long id) throws SQLException {
+    public void delete(long id) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CMD)) {
             preparedStatement.setLong(1, id);
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 }

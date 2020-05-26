@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -115,7 +116,8 @@ public class OpRepository {
         }
     }
 
-    public boolean create(Op op) throws SQLException {
+    public void create(Op op) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CMD)) {
             preparedStatement.setString(1, op.getName());
@@ -127,11 +129,15 @@ public class OpRepository {
             preparedStatement.setLong(7, op.getTask().getId());
             preparedStatement.setLong(8, op.getExecutor().getId());
             preparedStatement.setLong(9, op.getPeriod().getId());
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 
-    public boolean update(Op op) throws SQLException {
+    public void update(Op op) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CMD)) {
             preparedStatement.setString(1, op.getName());
@@ -144,19 +150,27 @@ public class OpRepository {
             preparedStatement.setLong(8, op.getExecutor().getId());
             preparedStatement.setLong(9, op.getPeriod().getId());
             preparedStatement.setLong(10, op.getId());
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 
-    public boolean delete(long id) throws SQLException {
+    public void delete(long id) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CMD)) {
             preparedStatement.setLong(1, id);
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 
-    public int[] updateStatus(List<Op> ops) throws SQLException {
+    public void updateStatus(List<Op> ops) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_STATUS_CMD)) {
             for (Op op : ops) {
@@ -164,7 +178,10 @@ public class OpRepository {
                 preparedStatement.setLong(2, op.getId());
                 preparedStatement.addBatch();
             }
-            return preparedStatement.executeBatch();
+            succeeded = Arrays.stream(preparedStatement.executeBatch()).count() == ops.size();
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 }

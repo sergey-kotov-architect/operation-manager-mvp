@@ -33,30 +33,42 @@ public class ExecutorRepository {
         }
     }
 
-    public boolean create(Executor executor) throws SQLException {
+    public void create(Executor executor) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CMD)) {
             preparedStatement.setString(1, executor.getName());
             preparedStatement.setString(2, executor.getNote());
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 
-    public boolean update(Executor executor) throws SQLException {
+    public void update(Executor executor) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CMD)) {
             preparedStatement.setString(1, executor.getName());
             preparedStatement.setString(2, executor.getNote());
             preparedStatement.setLong(3, executor.getId());
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 
-    public boolean delete(long id) throws SQLException {
+    public void delete(long id) throws SQLException {
+        boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CMD)) {
             preparedStatement.setLong(1, id);
-            return preparedStatement.executeUpdate() == 1;
+            succeeded = preparedStatement.executeUpdate() == 1;
+        }
+        if (!succeeded) {
+            throw new SQLException();
         }
     }
 }
