@@ -41,7 +41,6 @@ from its mean value.
 [Optimisation Service](src/main/java/com/sergeykotov/operationmanagermvp/schedule/OptimisationService.java)  
 
 ### TODO  
-* complete OpRepository  
 * provide extracting events in real-time mode  
 * implement Chat Service  
 * implement Notification Service  
