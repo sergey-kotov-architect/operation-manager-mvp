@@ -10,6 +10,7 @@ public class ConnectionPool {
 
     static {
         dataSource.setUrl("jdbc:sqlite:src/main/resources/operation-manager-mvp.sqlite");
+        dataSource.setConnectionProperties("foreign_keys=true;");
         dataSource.setMinIdle(1);
         dataSource.setMaxIdle(5);
         dataSource.setMaxTotal(500);
