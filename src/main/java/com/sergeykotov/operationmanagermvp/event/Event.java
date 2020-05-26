@@ -1,11 +1,14 @@
 package com.sergeykotov.operationmanagermvp.event;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Event {
     private long id;
-    private long start;
-    private long end;
+    private long startTimestamp;
+    private LocalDateTime start;
+    private long endTimestamp;
+    private LocalDateTime end;
     private long elapsed;
     private Action action;
     private Entity entity;
@@ -24,8 +27,19 @@ public class Event {
     public Event() {
     }
 
-    public Event(long start, long end, long elapsed, Action action, Entity entity, String name, String user, String note) {
+    public Event(long startTimestamp,
+                 LocalDateTime start,
+                 long endTimestamp,
+                 LocalDateTime end,
+                 long elapsed,
+                 Action action,
+                 Entity entity,
+                 String name,
+                 String user,
+                 String note) {
+        this.startTimestamp = startTimestamp;
         this.start = start;
+        this.endTimestamp = endTimestamp;
         this.end = end;
         this.elapsed = elapsed;
         this.action = action;
@@ -43,19 +57,35 @@ public class Event {
         this.id = id;
     }
 
-    public long getStart() {
+    public long getStartTimestamp() {
+        return startTimestamp;
+    }
+
+    public void setStartTimestamp(long startTimestamp) {
+        this.startTimestamp = startTimestamp;
+    }
+
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public void setStart(long start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
-    public long getEnd() {
+    public long getEndTimestamp() {
+        return endTimestamp;
+    }
+
+    public void setEndTimestamp(long endTimestamp) {
+        this.endTimestamp = endTimestamp;
+    }
+
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(long end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 

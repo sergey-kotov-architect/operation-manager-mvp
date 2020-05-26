@@ -8,7 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class EventService {
@@ -49,7 +52,9 @@ public class EventService {
             return;
         }
         String user = ""; //TODO: obtain username from current session
-        Event event = new Event(start, end, end - start, action, entity, name, user, note);
+        LocalDateTime startTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(start), TimeZone.getDefault().toZoneId());
+        LocalDateTime endTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(end), TimeZone.getDefault().toZoneId());
+        Event event = new Event(start, startTime, end, endTime, end - start, action, entity, name, user, note);
         try {
             eventRepository.create(event);
         } catch (Exception e) {

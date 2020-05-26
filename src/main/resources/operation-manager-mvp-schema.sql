@@ -43,13 +43,15 @@ CREATE TABLE op (
 );
 
 CREATE TABLE event (
-   id         INTEGER PRIMARY KEY,
-   start_time INTEGER NOT NULL,
-   end_time   INTEGER NOT NULL,
-   elapsed    INTEGER NOT NULL,
-   action     TEXT    NOT NULL,
-   entity     TEXT    NOT NULL,
-   name       TEXT    NOT NULL,
-   user       TEXT,
-   note       TEXT
+   id              INTEGER PRIMARY KEY,
+   start_timestamp INTEGER NOT NULL,
+   start_time      TEXT NOT NULL,
+   end_timestamp   INTEGER NOT NULL,
+   end_time        TEXT NOT NULL,
+   elapsed         INTEGER NOT NULL,
+   action          TEXT    NOT NULL,
+   entity          TEXT    NOT NULL,
+   name            TEXT    NOT NULL,
+   user            TEXT,
+   note            TEXT
 );
