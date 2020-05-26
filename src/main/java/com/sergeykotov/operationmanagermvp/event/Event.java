@@ -4,10 +4,10 @@ import java.util.Objects;
 
 public class Event {
     private long id;
-    private long startTimestamp;
-    private String start;
-    private long endTimestamp;
-    private String end;
+    private long start;
+    private String startTimestamp;
+    private long end;
+    private String endTimestamp;
     private long elapsed;
     private Action action;
     private Entity entity;
@@ -26,20 +26,20 @@ public class Event {
     public Event() {
     }
 
-    public Event(long startTimestamp,
-                 String start,
-                 long endTimestamp,
-                 String end,
+    public Event(long start,
+                 String startTimestamp,
+                 long end,
+                 String endTimestamp,
                  long elapsed,
                  Action action,
                  Entity entity,
                  String name,
                  String user,
                  String note) {
-        this.startTimestamp = startTimestamp;
         this.start = start;
-        this.endTimestamp = endTimestamp;
+        this.startTimestamp = startTimestamp;
         this.end = end;
+        this.endTimestamp = endTimestamp;
         this.elapsed = elapsed;
         this.action = action;
         this.entity = entity;
@@ -56,36 +56,36 @@ public class Event {
         this.id = id;
     }
 
-    public long getStartTimestamp() {
-        return startTimestamp;
-    }
-
-    public void setStartTimestamp(long startTimestamp) {
-        this.startTimestamp = startTimestamp;
-    }
-
-    public String getStart() {
+    public long getStart() {
         return start;
     }
 
-    public void setStart(String start) {
+    public void setStart(long start) {
         this.start = start;
     }
 
-    public long getEndTimestamp() {
-        return endTimestamp;
+    public String getStartTimestamp() {
+        return startTimestamp;
     }
 
-    public void setEndTimestamp(long endTimestamp) {
-        this.endTimestamp = endTimestamp;
+    public void setStartTimestamp(String startTimestamp) {
+        this.startTimestamp = startTimestamp;
     }
 
-    public String getEnd() {
+    public long getEnd() {
         return end;
     }
 
-    public void setEnd(String end) {
+    public void setEnd(long end) {
         this.end = end;
+    }
+
+    public String getEndTimestamp() {
+        return endTimestamp;
+    }
+
+    public void setEndTimestamp(String endTimestamp) {
+        this.endTimestamp = endTimestamp;
     }
 
     public long getElapsed() {

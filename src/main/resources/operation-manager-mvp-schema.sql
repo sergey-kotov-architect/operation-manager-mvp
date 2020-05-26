@@ -1,13 +1,13 @@
 CREATE TABLE task (
-  id   INTEGER PRIMARY KEY,
-  name TEXT    NOT NULL UNIQUE,
-  note TEXT
+    id   INTEGER PRIMARY KEY,
+    name TEXT    NOT NULL UNIQUE,
+    note TEXT
 );
 
 CREATE TABLE executor (
-  id   INTEGER PRIMARY KEY,
-  name TEXT    NOT NULL UNIQUE,
-  note TEXT
+    id   INTEGER PRIMARY KEY,
+    name TEXT    NOT NULL UNIQUE,
+    note TEXT
 );
 
 CREATE TABLE period (
@@ -43,15 +43,15 @@ CREATE TABLE op (
 );
 
 CREATE TABLE event (
-   id              INTEGER PRIMARY KEY,
-   start_timestamp INTEGER NOT NULL,
-   start_time      TEXT NOT NULL,
-   end_timestamp   INTEGER NOT NULL,
-   end_time        TEXT NOT NULL,
-   elapsed         INTEGER NOT NULL,
-   action          TEXT    NOT NULL,
-   entity          TEXT    NOT NULL,
-   name            TEXT    NOT NULL,
-   user            TEXT,
-   note            TEXT
+    id              INTEGER  PRIMARY KEY,
+    start_time      DATETIME,
+    start_timestamp DATETIME,
+    end_time        DATETIME,
+    end_timestamp   DATETIME,
+    elapsed         INTEGER,
+    [action]        TEXT,
+    entity          TEXT,
+    name            TEXT,
+    user            TEXT,
+    note            TEXT
 );
