@@ -38,7 +38,7 @@ CREATE TABLE op (
     task_id     INTEGER NOT NULL REFERENCES task (id) ON DELETE RESTRICT,
     executor_id INTEGER NOT NULL REFERENCES executor (id) ON DELETE RESTRICT,
     period_id   INTEGER NOT NULL REFERENCES period (id) ON DELETE RESTRICT,
-    UNIQUE (task_id, period_id, executor_id),
+    UNIQUE (task_id, executor_id, period_id),
     UNIQUE (name, group_id)
 );
 

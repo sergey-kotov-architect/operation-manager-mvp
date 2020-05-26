@@ -18,13 +18,14 @@ evaluates its metrics, tracks all activity in real-time, provides chat room, sen
 * generate an optimal schedule.  
 * extract domain entities, events, schedule, metrics by group ID, evaluate overall metrics.  
 * extract events in real-time mode.  
-* provide a chat room with real-time instant messaging and topics by operation groups.   
-* extract and modify notification settings concerning schedule changes (e.g. Email, Phone, Telegram, WhatsApp).  
+* provide a chat room with real-time instant messaging.   
+* extract and modify notification settings concerning schedule changes.  
 
 ### Technologies and Tools
 * Java 8 
 * Spring framework (Boot, Actuator, Web/MVC, Test, Slf4j/Logback)
 * SQLite, JDBC, Apache DBCP (connection pooling framework)  
+* Redis, Spring Data  
 * Maven 
 * IntelliJ IDEA  
 * JProfiler 
