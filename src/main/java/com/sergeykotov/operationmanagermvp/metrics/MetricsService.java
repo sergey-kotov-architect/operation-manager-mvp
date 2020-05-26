@@ -58,7 +58,7 @@ public class MetricsService {
 
     private Metrics evaluate(List<Op> ops) {
         Metrics metrics = new Metrics();
-        //TODO: implement evaluation
+        metrics.setOpCount(ops.size());
         return metrics;
     }
 
