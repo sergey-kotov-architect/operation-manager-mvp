@@ -21,12 +21,11 @@ public class EventController {
     }
 
     @GetMapping
-    public List<Event> extract() {
-        return eventService.extract();
-    }
-
-    @GetMapping
-    public List<Event> extract(@RequestParam long since) {
-        return eventService.extract(since);
+    public List<Event> extract(@RequestParam(required = false) Long since) {
+        if (since == null) {
+            return eventService.extract();
+        } else {
+            return eventService.extract(since);
+        }
     }
 }
