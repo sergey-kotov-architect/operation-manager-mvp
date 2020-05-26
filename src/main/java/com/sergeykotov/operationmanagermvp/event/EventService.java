@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 public class EventService {
     private static final Logger log = LoggerFactory.getLogger(EventService.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
 
     private final EventRepository eventRepository;
 
@@ -59,8 +61,8 @@ public class EventService {
             return;
         }
         String user = ""; //TODO: obtain username from current session
-        ZonedDateTime startTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(start), ZoneId.systemDefault());
-        ZonedDateTime endTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(end), ZoneId.systemDefault());
+        String startTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(start), ZoneId.systemDefault()).format(formatter);
+        String endTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(end), ZoneId.systemDefault()).format(formatter);
         Event event = new Event(start, startTime, end, endTime, end - start, action, entity, name, user, note);
         try {
             eventRepository.create(event);

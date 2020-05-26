@@ -2,7 +2,7 @@ package com.sergeykotov.operationmanagermvp.model;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 public class Period {
@@ -14,10 +14,10 @@ public class Period {
     private String note;
 
     @NotNull
-    private LocalDateTime start;
+    private ZonedDateTime start;
 
     @NotNull
-    private LocalDateTime end;
+    private ZonedDateTime end;
 
     public Period() {
     }
@@ -50,19 +50,19 @@ public class Period {
         this.note = note;
     }
 
-    public LocalDateTime getStart() {
+    public ZonedDateTime getStart() {
         return start;
     }
 
-    public void setStart(LocalDateTime start) {
+    public void setStart(ZonedDateTime start) {
         this.start = start;
     }
 
-    public LocalDateTime getEnd() {
+    public ZonedDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(ZonedDateTime end) {
         this.end = end;
     }
 

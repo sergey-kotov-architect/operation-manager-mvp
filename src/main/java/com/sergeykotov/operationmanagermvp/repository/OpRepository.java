@@ -7,6 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,8 +71,10 @@ public class OpRepository {
             Period period = new Period();
             period.setId(resultSet.getLong("period_id"));
             period.setName(resultSet.getString("p_name"));
-            period.setStart(resultSet.getTimestamp("start").toLocalDateTime());
-            period.setEnd(resultSet.getTimestamp("end").toLocalDateTime());
+            long start = resultSet.getLong("start");
+            period.setStart(ZonedDateTime.ofInstant(Instant.ofEpochMilli(start), ZoneId.systemDefault()));
+            long end = resultSet.getLong("end");
+            period.setEnd(ZonedDateTime.ofInstant(Instant.ofEpochMilli(end), ZoneId.systemDefault()));
             op.setPeriod(period);
 
             ops.add(op);

@@ -3,7 +3,13 @@ package com.sergeykotov.operationmanagermvp.repository;
 import com.sergeykotov.operationmanagermvp.model.Period;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +30,10 @@ public class PeriodRepository {
                 period.setId(resultSet.getLong("id"));
                 period.setName(resultSet.getString("name"));
                 period.setNote(resultSet.getString("note"));
-                period.setStart(resultSet.getTimestamp("start_time").toLocalDateTime());
-                period.setEnd(resultSet.getTimestamp("end_time").toLocalDateTime());
+                long start = resultSet.getLong("start_time");
+                period.setStart(ZonedDateTime.ofInstant(Instant.ofEpochMilli(start), ZoneId.systemDefault()));
+                long end = resultSet.getLong("end_time");
+                period.setEnd(ZonedDateTime.ofInstant(Instant.ofEpochMilli(end), ZoneId.systemDefault()));
                 periods.add(period);
             }
             return periods;
@@ -38,8 +46,8 @@ public class PeriodRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CMD)) {
             preparedStatement.setString(1, period.getName());
             preparedStatement.setString(2, period.getNote());
-            preparedStatement.setTimestamp(3, Timestamp.valueOf(period.getStart()));
-            preparedStatement.setTimestamp(4, Timestamp.valueOf(period.getEnd()));
+            preparedStatement.setLong(3, period.getStart().toInstant().toEpochMilli());
+            preparedStatement.setLong(4, period.getEnd().toInstant().toEpochMilli());
             succeeded = preparedStatement.executeUpdate() == 1;
         }
         if (!succeeded) {
@@ -53,8 +61,8 @@ public class PeriodRepository {
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CMD)) {
             preparedStatement.setString(1, period.getName());
             preparedStatement.setString(2, period.getNote());
-            preparedStatement.setTimestamp(3, Timestamp.valueOf(period.getStart()));
-            preparedStatement.setTimestamp(4, Timestamp.valueOf(period.getEnd()));
+            preparedStatement.setLong(3, period.getStart().toInstant().toEpochMilli());
+            preparedStatement.setLong(4, period.getEnd().toInstant().toEpochMilli());
             preparedStatement.setLong(5, period.getId());
             succeeded = preparedStatement.executeUpdate() == 1;
         }

@@ -7,8 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +16,15 @@ public class EventRepository {
     private static final String EXTRACT_SINCE_CMD = "select e.id, e.start_timestamp, e.start_time, e.end_timestamp, e.end_time, e.elapsed, e.action, e.entity, e.name, e.user, e.note from event e where e.start_timestamp >= ?";
     private static final String CREATE_CMD = "insert into event (start_timestamp,start_time,end_timestamp,end_time,elapsed,action,entity,name,user,note) values (?,?,?,?,?,?,?,?,?,?)";
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
-
     private List<Event> extract(ResultSet resultSet) throws SQLException {
         List<Event> events = new ArrayList<>();
         while (resultSet.next()) {
             Event event = new Event();
             event.setId(resultSet.getLong("id"));
             event.setStartTimestamp(resultSet.getLong("start_timestamp"));
-            event.setStart(ZonedDateTime.parse(resultSet.getString("start_time"), formatter));
+            event.setStart(resultSet.getString("start_time"));
             event.setEndTimestamp(resultSet.getLong("end_timestamp"));
-            event.setEnd(ZonedDateTime.parse(resultSet.getString("end_time"), formatter));
+            event.setEnd(resultSet.getString("end_time"));
             event.setElapsed(resultSet.getLong("elapsed"));
             event.setAction(Event.Action.valueOf(resultSet.getString("action")));
             event.setEntity(Event.Entity.valueOf(resultSet.getString("entity")));
@@ -62,9 +58,9 @@ public class EventRepository {
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_CMD)) {
             preparedStatement.setLong(1, event.getStartTimestamp());
-            preparedStatement.setString(2, event.getStart().format(formatter));
+            preparedStatement.setString(2, event.getStart());
             preparedStatement.setLong(3, event.getEndTimestamp());
-            preparedStatement.setString(4, event.getEnd().format(formatter));
+            preparedStatement.setString(4, event.getEnd());
             preparedStatement.setLong(5, event.getElapsed());
             preparedStatement.setString(6, event.getAction().name());
             preparedStatement.setString(7, event.getEntity().name());
