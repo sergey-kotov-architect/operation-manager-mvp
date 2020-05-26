@@ -148,6 +148,6 @@ public class Op {
 
     @Override
     public String toString() {
-        return getName();
+        return getGroup() + ": " + getName();
     }
 }
