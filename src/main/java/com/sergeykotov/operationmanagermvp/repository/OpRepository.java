@@ -26,13 +26,13 @@ public class OpRepository {
             "select o.id, o.name, o.note, o.status, o.profit, o.cost, o.group_id, o.task_id, o.executor_id, o.period_id, " +
                     " g.name as g_name, t.name as t_name, e.name as e_name, p.name as p_name, p.start_time as start, p.end_time as end " +
                     "from op o join op_group g on g.id = o.group_id join task t on o.task_id = t.id " +
-                    "join executor e on o.executor_id = e.id join period p on o.period_id = p.id where o.status <> 'UNSCHEDULED'";
+                    "join executor e on o.executor_id = e.id join period p on o.period_id = p.id where o.status <> ?";
     private static final String EXTRACT_SCHEDULE_BY_ID_CMD =
             "select o.id, o.name, o.note, o.status, o.profit, o.cost, o.group_id, o.task_id, o.executor_id, o.period_id, " +
                     " g.name as g_name, t.name as t_name, e.name as e_name, p.name as p_name, p.start_time as start, p.end_time as end " +
                     "from op o join op_group g on g.id = o.group_id join task t on o.task_id = t.id " +
                     "join executor e on o.executor_id = e.id join period p on o.period_id = p.id " +
-                    "where o.status <> 'UNSCHEDULED' and o.group_id = ?";
+                    "where o.status <> ? and o.group_id = ?";
     private static final String CREATE_CMD = "insert into op (name, note, status, profit, cost, group_id, task_id, executor_id, period_id) values (?,?,?,?,?,?,?,?,?)";
     private static final String UPDATE_CMD = "update op set name = ?, note = ?, status = ?, profit = ?, cost = ?, group_id = ?, task_id = ?, executor_id = ?, period_id = ? where id = ?";
     private static final String DELETE_CMD = "delete from op where id = ?";
@@ -96,16 +96,19 @@ public class OpRepository {
 
     public List<Op> extractSchedule() throws SQLException {
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_SCHEDULE_CMD);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            return extract(resultSet);
+             PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_SCHEDULE_CMD)) {
+            preparedStatement.setString(1, Op.Status.UNSCHEDULED.name());
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return extract(resultSet);
+            }
         }
     }
 
     public List<Op> extractSchedule(long groupId) throws SQLException {
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_SCHEDULE_BY_ID_CMD)) {
-            preparedStatement.setLong(1, groupId);
+            preparedStatement.setString(1, Op.Status.UNSCHEDULED.name());
+            preparedStatement.setLong(2, groupId);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 return extract(resultSet);
             }
