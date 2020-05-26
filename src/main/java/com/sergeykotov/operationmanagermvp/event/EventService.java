@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -19,11 +18,6 @@ import java.util.List;
 public class EventService {
     private static final Logger log = LoggerFactory.getLogger(EventService.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
-
-    static {
-        objectMapper.setDateFormat(DateFormat.getDateInstance());
-    }
 
     private final EventRepository eventRepository;
 
@@ -32,11 +26,9 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public List<Event> extract(Long since) {
-        if (since == null) {
-            return extract();
-        }
-        return extractSince(since);
+    private String getTimestamp(long epoch) {
+        DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
+        return ZonedDateTime.ofInstant(Instant.ofEpochMilli(epoch), ZoneId.systemDefault()).format(formatter);
     }
 
     private List<Event> extract() {
@@ -57,6 +49,13 @@ public class EventService {
         }
     }
 
+    public List<Event> extract(Long since) {
+        if (since == null) {
+            return extract();
+        }
+        return extractSince(since);
+    }
+
     public void create(long start, long end, Event.Action action, Event.Entity entity, String name, Object object) {
         String note;
         try {
@@ -65,10 +64,11 @@ public class EventService {
             log.error("failed to convert to JSON note of event {}", name, e);
             return;
         }
+        String startTimestamp = getTimestamp(start);
+        String endTimestamp = getTimestamp(end);
+        long elapsed = end - start;
         String user = ""; //TODO: obtain username from current session
-        String startTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(start), ZoneId.systemDefault()).format(formatter);
-        String endTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(end), ZoneId.systemDefault()).format(formatter);
-        Event event = new Event(start, startTime, end, endTime, end - start, action, entity, name, user, note);
+        Event event = new Event(start, startTimestamp, end, endTimestamp, elapsed, action, entity, name, user, note);
         try {
             eventRepository.create(event);
         } catch (Exception e) {
