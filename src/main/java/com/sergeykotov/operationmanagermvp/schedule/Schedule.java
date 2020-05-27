@@ -5,15 +5,19 @@ import com.sergeykotov.operationmanagermvp.model.Op;
 import java.util.List;
 
 public class Schedule {
-    private long groupId;
+    private Long groupId;
     private List<Op> ops;
 
-    public Schedule(long groupId, List<Op> ops) {
+    public Schedule(List<Op> ops) {
+        this.ops = ops;
+    }
+
+    public Schedule(Long groupId, List<Op> ops) {
         this.groupId = groupId;
         this.ops = ops;
     }
 
-    public long getGroupId() {
+    public Long getGroupId() {
         return groupId;
     }
 

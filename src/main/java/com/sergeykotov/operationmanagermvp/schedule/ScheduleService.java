@@ -44,7 +44,7 @@ public class ScheduleService {
             log.error("failed to extract schedule", e);
             throw new ExtractionException();
         }
-        return new Schedule(-1, ops);
+        return new Schedule(ops);
     }
 
     public Schedule extractByGroupId(long groupId) {
