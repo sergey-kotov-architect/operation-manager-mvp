@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/op")
+@RequestMapping("/api/op")
 public class OpController {
     private final OpService opService;
 

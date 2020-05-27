@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/executor")
+@RequestMapping("/api/executor")
 public class ExecutorController {
     private final ExecutorService executorService;
 

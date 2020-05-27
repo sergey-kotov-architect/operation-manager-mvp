@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/period")
+@RequestMapping("/api/period")
 public class PeriodController {
     private final PeriodService periodService;
 
