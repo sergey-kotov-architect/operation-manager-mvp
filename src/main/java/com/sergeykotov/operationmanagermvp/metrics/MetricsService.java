@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -66,13 +64,39 @@ public class MetricsService {
         long start = periods.stream().mapToLong(Period::getStart).min().orElse(0L);
         long end = periods.stream().mapToLong(Period::getEnd).max().orElse(0L);
 
+        List<ExecutorMetrics> executorMetricsList = new ArrayList<>();
         double mean = ops.stream().mapToDouble(Op::getCost).sum() / executors.size();
         double deviation = 0.0;
         for (Executor executor : executors) {
             double cost = ops.stream().filter(o -> o.getExecutor().equals(executor)).mapToDouble(Op::getCost).sum();
             deviation += Math.abs(cost - mean);
+            ExecutorMetrics executorMetrics = new ExecutorMetrics();
+            executorMetrics.setName(executor.getName());
+            executorMetrics.setCost(cost);
+            executorMetrics.setDeviation(deviation);
+            executorMetricsList.add(executorMetrics);
         }
         deviation = deviation / executors.size();
+
+        ExecutorMetrics minCost = executorMetricsList
+                .stream()
+                .min(Comparator.comparingDouble(ExecutorMetrics::getCost))
+                .orElse(new ExecutorMetrics());
+
+        ExecutorMetrics maxCost = executorMetricsList
+                .stream()
+                .max(Comparator.comparingDouble(ExecutorMetrics::getCost))
+                .orElse(new ExecutorMetrics());
+
+        ExecutorMetrics minDev = executorMetricsList
+                .stream()
+                .min(Comparator.comparingDouble(ExecutorMetrics::getDeviation))
+                .orElse(new ExecutorMetrics());
+
+        ExecutorMetrics maxDev = executorMetricsList
+                .stream()
+                .max(Comparator.comparingDouble(ExecutorMetrics::getDeviation))
+                .orElse(new ExecutorMetrics());
 
         Metrics metrics = new Metrics();
         metrics.setOpCount(ops.size());
@@ -80,9 +104,27 @@ public class MetricsService {
         metrics.setExecutorCount(executors.size());
         metrics.setPeriodCount(periods.size());
         metrics.setGroupCount(groups.size());
+
         metrics.setStart(start);
         metrics.setEnd(end);
+
+        metrics.setMinCost(minCost.getCost());
+        metrics.setMinCostExecutor(minCost.getName());
+
+        metrics.setMeanCost(mean);
+
+        metrics.setMaxCost(maxCost.getCost());
+        metrics.setMaxCostExecutor(maxCost.getName());
+
+        metrics.setMinDeviation(minDev.getDeviation());
+        metrics.setMinDeviationExecutor(minDev.getName());
+
         metrics.setMeanDeviation(deviation);
+
+        metrics.setMaxDeviation(maxDev.getDeviation());
+        metrics.setMaxDeviationExecutor(maxDev.getName());
+
+        metrics.setExecutorMetrics(executorMetricsList);
         return metrics;
     }
 

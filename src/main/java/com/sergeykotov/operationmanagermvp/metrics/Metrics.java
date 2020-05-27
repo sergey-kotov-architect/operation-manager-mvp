@@ -14,13 +14,17 @@ public class Metrics {
 
     private double minCost;
     private String minCostExecutor;
+
     private double meanCost;
+
     private double maxCost;
     private String maxCostExecutor;
 
     private double minDeviation;
     private String minDeviationExecutor;
+
     private double meanDeviation;
+
     private double maxDeviation;
     private String maxDeviationExecutor;
 
