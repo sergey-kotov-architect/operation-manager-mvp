@@ -47,7 +47,7 @@ public class ScheduleService {
         return new Schedule(-1, ops);
     }
 
-    public Schedule extract(long groupId) {
+    public Schedule extractByGroupId(long groupId) {
         List<Op> ops;
         try {
             ops = opRepository.extractSchedule(groupId);
@@ -61,7 +61,7 @@ public class ScheduleService {
     public void createSchedulingTask(long groupId) {
         List<Op> ops;
         try {
-            ops = opRepository.extract(groupId);
+            ops = opRepository.extractByGroupId(groupId);
         } catch (Exception e) {
             log.error("failed to extract ops for group ID {}", groupId, e);
             throw new ExtractionException();

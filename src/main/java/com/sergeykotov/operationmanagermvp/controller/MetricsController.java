@@ -24,7 +24,7 @@ public class MetricsController {
     }
 
     @GetMapping("/{id}")
-    public Metrics extract(@PathVariable long id) {
-        return metricsService.extract(id);
+    public Metrics extractByGroupId(@PathVariable long id) {
+        return metricsService.extractByGroupId(id);
     }
 }

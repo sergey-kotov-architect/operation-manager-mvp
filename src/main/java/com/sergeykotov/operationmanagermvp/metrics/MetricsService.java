@@ -133,10 +133,10 @@ public class MetricsService {
         groupRepository.updateMetricsById(id, json);
     }
 
-    public Metrics extract(long id) {
+    public Metrics extractByGroupId(long id) {
         Optional<Group> group;
         try {
-            group = groupRepository.findById(id);
+            group = groupRepository.extractById(id);
         } catch (Exception e) {
             log.error("failed to extract metrics for group ID {}", id, e);
             throw new ExtractionException();

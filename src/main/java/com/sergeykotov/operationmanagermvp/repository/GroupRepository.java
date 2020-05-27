@@ -13,16 +13,16 @@ import java.util.Optional;
 
 @Repository
 public class GroupRepository {
-    private static final String EXTRACT_CMD = "select g.id, g.name, g.note from op_group g";
-    private static final String FIND_BY_ID_CMD = "select g.name, g.note, g.metrics from op_group g where g.id = ?";
+    private static final String EXTRACT_ALL_CMD = "select g.id, g.name, g.note from op_group g";
+    private static final String EXTRACT_BY_ID_CMD = "select g.name, g.note, g.metrics from op_group g where g.id = ?";
     private static final String CREATE_CMD = "insert into op_group (name, note) values (?, ?)";
     private static final String UPDATE_CMD = "update op_group set name = ?, note = ?, metrics = ? where id = ?";
     private static final String UPDATE_METRICS_CMD = "update op_group set metrics = ? where id = ?";
     private static final String DELETE_CMD = "delete from op_group where id = ?";
 
-    public List<Group> extract() throws SQLException {
+    public List<Group> extractAll() throws SQLException {
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_CMD);
+             PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_ALL_CMD);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             List<Group> groups = new ArrayList<>();
             while (resultSet.next()) {
@@ -36,9 +36,9 @@ public class GroupRepository {
         }
     }
 
-    public Optional<Group> findById(long id) throws SQLException {
+    public Optional<Group> extractById(long id) throws SQLException {
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID_CMD)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_BY_ID_CMD)) {
             preparedStatement.setLong(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -68,7 +68,7 @@ public class GroupRepository {
         }
     }
 
-    public void update(Group group) throws SQLException {
+    public void updateById(Group group) throws SQLException {
         boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CMD)) {
@@ -96,7 +96,7 @@ public class GroupRepository {
         }
     }
 
-    public void delete(long id) throws SQLException {
+    public void deleteById(long id) throws SQLException {
         boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CMD)) {

@@ -22,8 +22,8 @@ public class ScheduleController {
     }
 
     @GetMapping("/{id}")
-    public Schedule extract(@PathVariable long id) {
-        return scheduleService.extract(id);
+    public Schedule extractByGroupId(@PathVariable long id) {
+        return scheduleService.extractByGroupId(id);
     }
 
     @PostMapping("/{id}")

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public class EventRepository {
-    private static final String EXTRACT_CMD = "select e.id, e.start_time, e.start_timestamp, e.end_time, e.end_timestamp, e.elapsed, e.action, e.entity, e.name, e.user, e.note from event e";
+    private static final String EXTRACT_ALL_CMD = "select e.id, e.start_time, e.start_timestamp, e.end_time, e.end_timestamp, e.elapsed, e.action, e.entity, e.name, e.user, e.note from event e";
     private static final String EXTRACT_SINCE_CMD = "select e.id, e.start_time, e.start_timestamp, e.end_time, e.end_timestamp, e.elapsed, e.action, e.entity, e.name, e.user, e.note from event e where e.start_time >= ?";
     private static final String CREATE_CMD = "insert into event (start_time,start_timestamp,end_time,end_timestamp,elapsed,action,entity,name,user,note) values (?,?,?,?,?,?,?,?,?,?)";
 
@@ -36,15 +36,15 @@ public class EventRepository {
         return events;
     }
 
-    public List<Event> extract() throws SQLException {
+    public List<Event> extractAll() throws SQLException {
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_CMD);
+             PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_ALL_CMD);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             return extract(resultSet);
         }
     }
 
-    public List<Event> extract(long since) throws SQLException {
+    public List<Event> extractSince(long since) throws SQLException {
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_SINCE_CMD)) {
             preparedStatement.setLong(1, since);

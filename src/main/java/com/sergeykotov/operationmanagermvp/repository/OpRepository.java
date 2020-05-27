@@ -10,14 +10,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OpRepository {
-    private static final String EXTRACT_CMD =
+    private static final String EXTRACT_ALL_CMD =
             "select o.id, o.name, o.note, o.status, o.profit, o.cost, o.group_id, o.task_id, o.executor_id, o.period_id, " +
                     " g.name as g_name, t.name as t_name, e.name as e_name, p.name as p_name, p.start_time as start, p.end_time as end " +
                     "from op o join op_group g on g.id = o.group_id join task t on o.task_id = t.id " +
                     "join executor e on o.executor_id = e.id join period p on o.period_id = p.id";
+    private static final String EXTRACT_BY_ID_CMD =
+            "select o.id, o.name, o.note, o.status, o.profit, o.cost, o.group_id, o.task_id, o.executor_id, o.period_id, " +
+                    " g.name as g_name, t.name as t_name, e.name as e_name, p.name as p_name, p.start_time as start, p.end_time as end " +
+                    "from op o join op_group g on g.id = o.group_id join task t on o.task_id = t.id " +
+                    "join executor e on o.executor_id = e.id join period p on o.period_id = p.id where o.id = ?";
     private static final String EXTRACT_BY_GROUP_ID_CMD =
             "select o.id, o.name, o.note, o.status, o.profit, o.cost, o.group_id, o.task_id, o.executor_id, o.period_id, " +
                     " g.name as g_name, t.name as t_name, e.name as e_name, p.name as p_name, p.start_time as start, p.end_time as end " +
@@ -77,15 +83,29 @@ public class OpRepository {
         return ops;
     }
 
-    public List<Op> extract() throws SQLException {
+    public List<Op> extractAll() throws SQLException {
         try (Connection connection = ConnectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_CMD);
+             PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_ALL_CMD);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             return extract(resultSet);
         }
     }
 
-    public List<Op> extract(long groupId) throws SQLException {
+    public Optional<Op> extractById(long id) throws SQLException {
+        try (Connection connection = ConnectionPool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_BY_ID_CMD)) {
+            preparedStatement.setLong(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                List<Op> ops = extract(resultSet);
+                if (ops.isEmpty()) {
+                    return Optional.empty();
+                }
+                return Optional.of(ops.get(0));
+            }
+        }
+    }
+
+    public List<Op> extractByGroupId(long groupId) throws SQLException {
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(EXTRACT_BY_GROUP_ID_CMD)) {
             preparedStatement.setLong(1, groupId);
@@ -136,7 +156,7 @@ public class OpRepository {
         }
     }
 
-    public void update(Op op) throws SQLException {
+    public void updateById(Op op) throws SQLException {
         boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_CMD)) {
@@ -157,7 +177,7 @@ public class OpRepository {
         }
     }
 
-    public void delete(long id) throws SQLException {
+    public void deleteById(long id) throws SQLException {
         boolean succeeded;
         try (Connection connection = ConnectionPool.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CMD)) {

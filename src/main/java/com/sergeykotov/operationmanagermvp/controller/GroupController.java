@@ -20,8 +20,13 @@ public class GroupController {
     }
 
     @GetMapping
-    public List<Group> extract() {
-        return groupService.extract();
+    public List<Group> extractAll() {
+        return groupService.extractAll();
+    }
+
+    @GetMapping("/{id}")
+    public Group extractById(@PathVariable long id) {
+        return groupService.extractById(id);
     }
 
     @PostMapping
@@ -32,13 +37,13 @@ public class GroupController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable long id, @RequestBody @Valid Group group) {
-        groupService.update(id, group);
+    public void updateById(@PathVariable long id, @RequestBody @Valid Group group) {
+        groupService.updateById(id, group);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id, @RequestBody @Valid Group group) {
-        groupService.delete(id, group);
+    public void deleteById(@PathVariable long id) {
+        groupService.deleteById(id);
     }
 }

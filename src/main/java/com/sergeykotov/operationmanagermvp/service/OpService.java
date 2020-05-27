@@ -4,6 +4,7 @@ import com.sergeykotov.operationmanagermvp.event.Event;
 import com.sergeykotov.operationmanagermvp.event.EventService;
 import com.sergeykotov.operationmanagermvp.exception.DatabaseException;
 import com.sergeykotov.operationmanagermvp.exception.ExtractionException;
+import com.sergeykotov.operationmanagermvp.exception.NotFoundException;
 import com.sergeykotov.operationmanagermvp.metrics.MetricsService;
 import com.sergeykotov.operationmanagermvp.model.Op;
 import com.sergeykotov.operationmanagermvp.repository.OpRepository;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OpService {
@@ -29,13 +31,24 @@ public class OpService {
         this.metricsService = metricsService;
     }
 
-    public List<Op> extract() {
+    public List<Op> extractAll() {
         try {
-            return opRepository.extract();
+            return opRepository.extractAll();
         } catch (Exception e) {
             log.error("failed to extract ops", e);
             throw new ExtractionException();
         }
+    }
+
+    public Op extractById(long id) {
+        Optional<Op> op;
+        try {
+            op = opRepository.extractById(id);
+        } catch (Exception e) {
+            log.error("failed to extract op by ID {}", id, e);
+            throw new ExtractionException();
+        }
+        return op.orElseThrow(NotFoundException::new);
     }
 
     public void create(Op op) {
@@ -53,28 +66,29 @@ public class OpService {
         metricsService.createEvaluatingTask(op.getGroup().getId());
     }
 
-    public void update(long id, Op op) {
+    public void updateById(long id, Op op) {
         op.setId(id);
-        log.info("updating op {}", op);
+        Op currentOp = extractById(id);
+        log.info("updating op {} to {}", currentOp, op);
         long start = System.currentTimeMillis();
         try {
-            opRepository.update(op);
+            opRepository.updateById(op);
         } catch (Exception e) {
-            log.error("failed to update op {}", op, e);
+            log.error("failed to update op {} to {}", currentOp, op, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("op {} updated", op);
+        log.info("op {} updated to {}", currentOp, op);
         eventService.create(start, end, Event.Action.UPDATED, Event.Entity.OP, op.toString(), op);
         metricsService.createEvaluatingTask(op.getGroup().getId());
     }
 
-    public void delete(long id, Op op) {
-        op.setId(id);
+    public void deleteById(long id) {
+        Op op = extractById(id);
         log.info("deleting op {}", op);
         long start = System.currentTimeMillis();
         try {
-            opRepository.delete(op.getId());
+            opRepository.deleteById(id);
         } catch (Exception e) {
             log.error("failed to delete op {}", op, e);
             throw new DatabaseException();

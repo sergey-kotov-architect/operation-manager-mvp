@@ -33,7 +33,7 @@ public class EventService {
 
     private List<Event> extract() {
         try {
-            return eventRepository.extract();
+            return eventRepository.extractAll();
         } catch (Exception e) {
             log.error("failed to extract events", e);
             throw new ExtractionException();
@@ -42,7 +42,7 @@ public class EventService {
 
     private List<Event> extractSince(long since) {
         try {
-            return eventRepository.extract(since);
+            return eventRepository.extractSince(since);
         } catch (Exception e) {
             log.error("failed to extract events since {}", since, e);
             throw new ExtractionException();

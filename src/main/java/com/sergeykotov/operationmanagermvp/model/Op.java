@@ -3,12 +3,14 @@ package com.sergeykotov.operationmanagermvp.model;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class Op {
     private long id;
 
     @NotEmpty
+    @Size(max = 255)
     private String name;
 
     private String note;

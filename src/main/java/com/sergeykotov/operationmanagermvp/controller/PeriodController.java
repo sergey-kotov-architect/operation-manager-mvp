@@ -20,8 +20,13 @@ public class PeriodController {
     }
 
     @GetMapping
-    public List<Period> extract() {
-        return periodService.extract();
+    public List<Period> extractAll() {
+        return periodService.extractAll();
+    }
+
+    @GetMapping("/{id}")
+    public Period extractById(@PathVariable long id) {
+        return periodService.extractById(id);
     }
 
     @PostMapping
@@ -32,13 +37,13 @@ public class PeriodController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable long id, @RequestBody @Valid Period period) {
-        periodService.update(id, period);
+    public void updateById(@PathVariable long id, @RequestBody @Valid Period period) {
+        periodService.updateById(id, period);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id, @RequestBody @Valid Period period) {
-        periodService.delete(id, period);
+    public void deleteById(@PathVariable long id) {
+        periodService.deleteById(id);
     }
 }

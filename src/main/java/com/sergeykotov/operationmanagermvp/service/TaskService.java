@@ -4,6 +4,7 @@ import com.sergeykotov.operationmanagermvp.event.Event;
 import com.sergeykotov.operationmanagermvp.event.EventService;
 import com.sergeykotov.operationmanagermvp.exception.DatabaseException;
 import com.sergeykotov.operationmanagermvp.exception.ExtractionException;
+import com.sergeykotov.operationmanagermvp.exception.NotFoundException;
 import com.sergeykotov.operationmanagermvp.model.Task;
 import com.sergeykotov.operationmanagermvp.repository.TaskRepository;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -26,13 +28,24 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public List<Task> extract() {
+    public List<Task> extractAll() {
         try {
-            return taskRepository.extract();
+            return taskRepository.extractAll();
         } catch (Exception e) {
             log.error("failed to extract tasks", e);
             throw new ExtractionException();
         }
+    }
+
+    public Task extractById(long id) {
+        Optional<Task> task;
+        try {
+            task = taskRepository.extractById(id);
+        } catch (Exception e) {
+            log.error("failed to extract task by ID {}", id, e);
+            throw new ExtractionException();
+        }
+        return task.orElseThrow(NotFoundException::new);
     }
 
     public void create(Task task) {
@@ -49,27 +62,28 @@ public class TaskService {
         eventService.create(start, end, Event.Action.CREATED, Event.Entity.TASK, task.toString(), task);
     }
 
-    public void update(long id, Task task) {
+    public void updateById(long id, Task task) {
         task.setId(id);
-        log.info("updating task {}", task);
+        Task currentTask = extractById(id);
+        log.info("updating task {} to {}", currentTask, task);
         long start = System.currentTimeMillis();
         try {
-            taskRepository.update(task);
+            taskRepository.updateById(task);
         } catch (Exception e) {
-            log.error("failed to update task {}", task, e);
+            log.error("failed to update task {} to {}", currentTask, task, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("task {} updated", task);
+        log.info("task {} updated to {}", currentTask, task);
         eventService.create(start, end, Event.Action.UPDATED, Event.Entity.TASK, task.toString(), task);
     }
 
-    public void delete(long id, Task task) {
-        task.setId(id);
+    public void deleteById(long id) {
+        Task task = extractById(id);
         log.info("deleting task {}", task);
         long start = System.currentTimeMillis();
         try {
-            taskRepository.delete(task.getId());
+            taskRepository.deleteById(id);
         } catch (Exception e) {
             log.error("failed to delete task {}", task, e);
             throw new DatabaseException();

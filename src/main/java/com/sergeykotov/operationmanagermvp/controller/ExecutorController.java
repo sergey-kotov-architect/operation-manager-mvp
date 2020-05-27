@@ -20,8 +20,13 @@ public class ExecutorController {
     }
 
     @GetMapping
-    public List<Executor> extract() {
-        return executorService.extract();
+    public List<Executor> extractAll() {
+        return executorService.extractAll();
+    }
+
+    @GetMapping("/{id}")
+    public Executor extractById(@PathVariable long id) {
+        return executorService.extractById(id);
     }
 
     @PostMapping
@@ -32,13 +37,13 @@ public class ExecutorController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable long id, @RequestBody @Valid Executor executor) {
-        executorService.update(id, executor);
+    public void updateById(@PathVariable long id, @RequestBody @Valid Executor executor) {
+        executorService.updateById(id, executor);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id, @RequestBody @Valid Executor executor) {
-        executorService.delete(id, executor);
+    public void deleteById(@PathVariable long id) {
+        executorService.deleteById(id);
     }
 }

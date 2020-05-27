@@ -4,6 +4,7 @@ import com.sergeykotov.operationmanagermvp.event.Event;
 import com.sergeykotov.operationmanagermvp.event.EventService;
 import com.sergeykotov.operationmanagermvp.exception.DatabaseException;
 import com.sergeykotov.operationmanagermvp.exception.ExtractionException;
+import com.sergeykotov.operationmanagermvp.exception.NotFoundException;
 import com.sergeykotov.operationmanagermvp.model.Period;
 import com.sergeykotov.operationmanagermvp.repository.PeriodRepository;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PeriodService {
@@ -26,13 +28,24 @@ public class PeriodService {
         this.periodRepository = periodRepository;
     }
 
-    public List<Period> extract() {
+    public List<Period> extractAll() {
         try {
-            return periodRepository.extract();
+            return periodRepository.extractAll();
         } catch (Exception e) {
             log.error("failed to extract periods", e);
             throw new ExtractionException();
         }
+    }
+
+    public Period extractById(long id) {
+        Optional<Period> period;
+        try {
+            period = periodRepository.extractById(id);
+        } catch (Exception e) {
+            log.error("failed to extract period by ID {}", id, e);
+            throw new ExtractionException();
+        }
+        return period.orElseThrow(NotFoundException::new);
     }
 
     public void create(Period period) {
@@ -49,27 +62,28 @@ public class PeriodService {
         eventService.create(start, end, Event.Action.CREATED, Event.Entity.PERIOD, period.toString(), period);
     }
 
-    public void update(long id, Period period) {
+    public void updateById(long id, Period period) {
         period.setId(id);
-        log.info("updating period {}", period);
+        Period currentPeriod = extractById(id);
+        log.info("updating period {} to {}", currentPeriod, period);
         long start = System.currentTimeMillis();
         try {
-            periodRepository.update(period);
+            periodRepository.updateById(period);
         } catch (Exception e) {
-            log.error("failed to update period {}", period, e);
+            log.error("failed to update period {} to {}", currentPeriod, period, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("period {} updated", period);
+        log.info("period {} updated to {}", currentPeriod, period);
         eventService.create(start, end, Event.Action.UPDATED, Event.Entity.PERIOD, period.toString(), period);
     }
 
-    public void delete(long id, Period period) {
-        period.setId(id);
+    public void deleteById(long id) {
+        Period period = extractById(id);
         log.info("deleting period {}", period);
         long start = System.currentTimeMillis();
         try {
-            periodRepository.delete(period.getId());
+            periodRepository.deleteById(id);
         } catch (Exception e) {
             log.error("failed to delete period {}", period, e);
             throw new DatabaseException();

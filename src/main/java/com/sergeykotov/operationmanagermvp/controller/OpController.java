@@ -20,8 +20,13 @@ public class OpController {
     }
 
     @GetMapping
-    public List<Op> extract() {
-        return opService.extract();
+    public List<Op> extractAll() {
+        return opService.extractAll();
+    }
+
+    @GetMapping("/{id}")
+    public Op extractById(@PathVariable long id) {
+        return opService.extractById(id);
     }
 
     @PostMapping
@@ -32,13 +37,13 @@ public class OpController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable long id, @RequestBody @Valid Op op) {
-        opService.update(id, op);
+    public void updateById(@PathVariable long id, @RequestBody @Valid Op op) {
+        opService.updateById(id, op);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable long id, @RequestBody @Valid Op op) {
-        opService.delete(id, op);
+    public void deleteById(@PathVariable long id) {
+        opService.deleteById(id);
     }
 }
