@@ -42,54 +42,58 @@ public class PeriodService {
         try {
             period = periodRepository.extractById(id);
         } catch (Exception e) {
-            log.error("failed to extract period by ID {}", id, e);
+            log.error("failed to extract period by ID: {}", id, e);
             throw new ExtractionException();
         }
         return period.orElseThrow(NotFoundException::new);
     }
 
     public void create(Period period) {
-        log.info("creating period {}", period);
+        log.info("creating period: {}", period);
         long start = System.currentTimeMillis();
         try {
             periodRepository.create(period);
         } catch (Exception e) {
-            log.error("failed to create period {}", period, e);
+            log.error("failed to create period: {}", period, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("period {} created", period);
+        log.info("period created: {}", period);
         eventService.create(start, end, Event.Action.CREATED, Event.Entity.PERIOD, period.toString(), period);
     }
 
     public void updateById(long id, Period period) {
         period.setId(id);
         Period currentPeriod = extractById(id);
-        log.info("updating period {} to {}", currentPeriod, period);
+        String update = currentPeriod.getName();
+        if (!update.equals(period.getName())) {
+            update = update + " -> " + period.getName();
+        }
+        log.info("updating period: {}", update);
         long start = System.currentTimeMillis();
         try {
             periodRepository.updateById(period);
         } catch (Exception e) {
-            log.error("failed to update period {} to {}", currentPeriod, period, e);
+            log.error("failed to update period: {}", update, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("period {} updated to {}", currentPeriod, period);
+        log.info("period updated: {}", update);
         eventService.create(start, end, Event.Action.UPDATED, Event.Entity.PERIOD, period.toString(), period);
     }
 
     public void deleteById(long id) {
         Period period = extractById(id);
-        log.info("deleting period {}", period);
+        log.info("deleting period: {}", period);
         long start = System.currentTimeMillis();
         try {
             periodRepository.deleteById(id);
         } catch (Exception e) {
-            log.error("failed to delete period {}", period, e);
+            log.error("failed to delete period: {}", period, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("period {} deleted", period);
+        log.info("period deleted: {}", period);
         eventService.create(start, end, Event.Action.DELETED, Event.Entity.PERIOD, period.toString(), period);
     }
 }

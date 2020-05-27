@@ -42,54 +42,58 @@ public class GroupService {
         try {
             group = groupRepository.extractById(id);
         } catch (Exception e) {
-            log.error("failed to extract group by ID {}", id, e);
+            log.error("failed to extract group by ID: {}", id, e);
             throw new ExtractionException();
         }
         return group.orElseThrow(NotFoundException::new);
     }
 
     public void create(Group group) {
-        log.info("creating group {}", group);
+        log.info("creating group: {}", group);
         long start = System.currentTimeMillis();
         try {
             groupRepository.create(group);
         } catch (Exception e) {
-            log.error("failed to create group {}", group, e);
+            log.error("failed to create group: {}", group, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("group {} created", group);
+        log.info("group created: {}", group);
         eventService.create(start, end, Event.Action.CREATED, Event.Entity.GROUP, group.toString(), group);
     }
 
     public void updateById(long id, Group group) {
         group.setId(id);
         Group currentGroup = extractById(id);
-        log.info("updating group {} to {}", currentGroup, group);
+        String update = currentGroup.getName();
+        if (!update.equals(group.getName())) {
+            update = update + " -> " + group.getName();
+        }
+        log.info("updating group: {}", update);
         long start = System.currentTimeMillis();
         try {
             groupRepository.updateById(group);
         } catch (Exception e) {
-            log.error("failed to update group {} to {}", currentGroup, group, e);
+            log.error("failed to update group: {}", update, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("group {} updated to {}", currentGroup, group);
+        log.info("group updated: {}", update);
         eventService.create(start, end, Event.Action.UPDATED, Event.Entity.GROUP, group.toString(), group);
     }
 
     public void deleteById(long id) {
         Group group = extractById(id);
-        log.info("deleting group {}", group);
+        log.info("deleting group: {}", group);
         long start = System.currentTimeMillis();
         try {
             groupRepository.deleteById(id);
         } catch (Exception e) {
-            log.error("failed to delete group {}", group, e);
+            log.error("failed to delete group: {}", group, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("group {} deleted", group);
+        log.info("group deleted: {}", group);
         eventService.create(start, end, Event.Action.DELETED, Event.Entity.GROUP, group.toString(), group);
     }
 }

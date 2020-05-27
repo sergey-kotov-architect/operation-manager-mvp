@@ -42,54 +42,58 @@ public class ExecutorService {
         try {
             executor = executorRepository.extractById(id);
         } catch (Exception e) {
-            log.error("failed to extract executor by ID {}", id, e);
+            log.error("failed to extract executor by ID: {}", id, e);
             throw new ExtractionException();
         }
         return executor.orElseThrow(NotFoundException::new);
     }
 
     public void create(Executor executor) {
-        log.info("creating executor {}", executor);
+        log.info("creating executor: {}", executor);
         long start = System.currentTimeMillis();
         try {
             executorRepository.create(executor);
         } catch (Exception e) {
-            log.error("failed to create executor {}", executor, e);
+            log.error("failed to create executor: {}", executor, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("executor {} created", executor);
+        log.info("executor created: {}", executor);
         eventService.create(start, end, Event.Action.CREATED, Event.Entity.EXECUTOR, executor.toString(), executor);
     }
 
     public void updateById(long id, Executor executor) {
         executor.setId(id);
         Executor currentExecutor = extractById(id);
-        log.info("updating executor {} to {}", currentExecutor, executor);
+        String update = currentExecutor.getName();
+        if (!update.equals(executor.getName())) {
+            update = update + " -> " + executor.getName();
+        }
+        log.info("updating executor: {}", update);
         long start = System.currentTimeMillis();
         try {
             executorRepository.updateById(executor);
         } catch (Exception e) {
-            log.error("failed to update executor {} to {}", currentExecutor, executor, e);
+            log.error("failed to update executor: {}", update, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("executor {} updated to {}", currentExecutor, executor);
+        log.info("executor updated: {}", update);
         eventService.create(start, end, Event.Action.UPDATED, Event.Entity.EXECUTOR, executor.toString(), executor);
     }
 
     public void deleteById(long id) {
         Executor executor = extractById(id);
-        log.info("deleting executor {}", executor);
+        log.info("deleting executor: {}", executor);
         long start = System.currentTimeMillis();
         try {
             executorRepository.deleteById(id);
         } catch (Exception e) {
-            log.error("failed to delete executor {}", executor, e);
+            log.error("failed to delete executor: {}", executor, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("executor {} deleted", executor);
+        log.info("executor deleted: {}", executor);
         eventService.create(start, end, Event.Action.DELETED, Event.Entity.EXECUTOR, executor.toString(), executor);
     }
 }

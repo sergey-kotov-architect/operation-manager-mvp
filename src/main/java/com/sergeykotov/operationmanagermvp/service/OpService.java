@@ -45,23 +45,23 @@ public class OpService {
         try {
             op = opRepository.extractById(id);
         } catch (Exception e) {
-            log.error("failed to extract op by ID {}", id, e);
+            log.error("failed to extract op by ID: {}", id, e);
             throw new ExtractionException();
         }
         return op.orElseThrow(NotFoundException::new);
     }
 
     public void create(Op op) {
-        log.info("creating op {}", op);
+        log.info("creating op: {}", op);
         long start = System.currentTimeMillis();
         try {
             opRepository.create(op);
         } catch (Exception e) {
-            log.error("failed to create op {}", op, e);
+            log.error("failed to create op: {}", op, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("op {} created", op);
+        log.info("op created: {}", op);
         eventService.create(start, end, Event.Action.CREATED, Event.Entity.OP, op.toString(), op);
         metricsService.createEvaluatingTask(op.getGroup().getId());
     }
@@ -69,32 +69,36 @@ public class OpService {
     public void updateById(long id, Op op) {
         op.setId(id);
         Op currentOp = extractById(id);
-        log.info("updating op {} to {}", currentOp, op);
+        String update = currentOp.toString();
+        if (!update.equals(op.toString())) {
+            update = update + " -> " + op.toString();
+        }
+        log.info("updating op: {}", update);
         long start = System.currentTimeMillis();
         try {
             opRepository.updateById(op);
         } catch (Exception e) {
-            log.error("failed to update op {} to {}", currentOp, op, e);
+            log.error("failed to update op: {}", update, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("op {} updated to {}", currentOp, op);
+        log.info("op updated: {}", update);
         eventService.create(start, end, Event.Action.UPDATED, Event.Entity.OP, op.toString(), op);
         metricsService.createEvaluatingTask(op.getGroup().getId());
     }
 
     public void deleteById(long id) {
         Op op = extractById(id);
-        log.info("deleting op {}", op);
+        log.info("deleting op: {}", op);
         long start = System.currentTimeMillis();
         try {
             opRepository.deleteById(id);
         } catch (Exception e) {
-            log.error("failed to delete op {}", op, e);
+            log.error("failed to delete op: {}", op, e);
             throw new DatabaseException();
         }
         long end = System.currentTimeMillis();
-        log.info("op {} deleted", op);
+        log.info("op deleted: {}", op);
         eventService.create(start, end, Event.Action.DELETED, Event.Entity.OP, op.toString(), op);
         metricsService.createEvaluatingTask(op.getGroup().getId());
     }
